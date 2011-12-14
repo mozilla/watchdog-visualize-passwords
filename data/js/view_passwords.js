@@ -1,7 +1,7 @@
 var loginData;
 var vis;
 
-var w=800;var h=600;var fill = d3.scale.category20();
+var w=800;var h=600;var fill = d3.scale.category10();
 
 function init() {
     vis = d3.select("#chart").append("svg:svg")
@@ -26,11 +26,12 @@ function startViz() {
     .data(loginData.links)
     .enter().append("svg:line")
     .attr("class", "link")
-    .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+    .style("stroke-width", function(d) { return d.value; })
     .attr("x1", function(d) { return d.source.x; })
     .attr("y1", function(d) { return d.source.y; })
     .attr("x2", function(d) { return d.target.x; })
-    .attr("y2", function(d) { return d.target.y; });
+    .attr("y2", function(d) { return d.target.y; })
+    .style("stroke", function(d) { return fill(d.value); });
 
     var node = vis.selectAll("circle.node")
     .data(loginData.nodes)
