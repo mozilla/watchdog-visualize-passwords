@@ -59,12 +59,7 @@ function randomizeHash(passwordHash) {
 }
 
 function getDataURLForHash(passwordHash,inputWidth,inputHeight) {
-    var win = window;
-    try {
-        win = unsafeWindow;   
-    }
-    catch(e) {}
-    var canvas = win.document.createElement('canvas');
+    var canvas = document.createElement('canvas');
     canvas.height = inputHeight;
     canvas.width = inputWidth;
     var context = canvas.getContext('2d');
