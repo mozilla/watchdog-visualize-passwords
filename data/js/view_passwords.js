@@ -50,6 +50,15 @@ function startViz() {
     })
     .style("fill", function(d) { return fill(d.group); })
     .call(force.drag);
+    
+    circleNodes.on('click', function(d) {
+        // Password nodes only
+        if (d.group != 0) return;
+        
+        if (confirm("Are you sure you want to display this password in cleartext?")) {
+            alert(d.name);
+        }
+    });
 
     var rectNodes = vis.selectAll('.node').data(loginData.nodes)
     .enter().append("svg:rect")
@@ -69,11 +78,6 @@ function startViz() {
         $('.infoPopup').hide();
     });    
     
-    // node.append("svg:text").text(function(d) { return "hey"; });
-    // 
-    // node.append("svg:title")
-    //     .text(function(d) { return d.name; });
-
     vis.style("opacity", 1e-6)
       .transition()
         .duration(1000)
