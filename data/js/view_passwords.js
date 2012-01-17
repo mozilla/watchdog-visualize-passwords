@@ -33,8 +33,12 @@ function startViz() {
     .attr("y2", function(d) { return d.target.y; })
     .style("stroke", function(d) { return fill(d.value); });
 
-    var node = vis.selectAll("circle.node")
-    .data(loginData.nodes)
+    var circleNodes = vis.selectAll(".node")
+    .data(
+        loginData.nodes.filter(
+            function(x) { 
+                return x.group != 2;
+            }))
     .enter().append("svg:circle")
     .attr("class", "node")
     .attr("cx", function(d) { return d.x; })
@@ -47,6 +51,17 @@ function startViz() {
     .style("fill", function(d) { return fill(d.group); })
     .call(force.drag);
 
+    var rectNodes = vis.selectAll('.node').data(loginData.nodes)
+    .enter().append("svg:rect")
+    .attr("class", "node")
+    .attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; })
+    .attr("width", 15)
+    .attr("height", 15)
+    .style("fill", function(d) { return fill(d.group); })
+    .call(force.drag);
+    
+    var node = vis.selectAll(".node");
 
     node.on("mouseover", mouseOver);
     
@@ -65,13 +80,17 @@ function startViz() {
         .style("opacity", 1);
 
     force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
+        link.attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
-      node.attr("cx", function(d) { return d.x; })
+        circleNodes.attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
+
+        rectNodes.attr("x", function(d) { return d.x - (rectNodes.attr('width')/2); })
+            .attr("y", function(d) { return d.y - (rectNodes.attr('height')/2); });
+
     });
 }
 
@@ -94,12 +113,9 @@ function mouseOver(e) {
     
     if (e.group == 0) {
         $('#obfuscatePassword').html(obfuscatePassword(e.name));
-        // $('#passwordStrength').html(passwordStrength(e.name).score);
         $('#passwordInfo').show();
         drawPasswordStrength($('#passwordStrengthCanvas').get()[0],passwordStrength(e.name));
-        console.log(getDataURLForHash(SHA1(e.name),200,15));
         $('#passwordInfoHashImage').attr('src',getDataURLForHash(SHA1(e.name),200,15));
-        // drawPasswordHash($('#passwordInfoHashCanvas').get()[0],e.name);
     }
     else {
         $('#siteInfo').html(e.name).show();
