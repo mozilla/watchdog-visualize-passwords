@@ -1,9 +1,14 @@
 var loginData;
 var vis;
 
-var w=800;var h=600;var fill = d3.scale.category10();
+var fill = d3.scale.category10();
+
+var w,h;
 
 function init() {
+    w = 800;
+    h = 600;
+
     vis = d3.select("#chart").append("svg:svg")
         .attr("width", w)
         .attr("height", h);
@@ -19,7 +24,7 @@ function startViz() {
     .charge(-100)
     .nodes(loginData.nodes)
     .links(loginData.links)
-    .size([800, 600])
+    .size([w, h])
     .start();
 
     var link = vis.selectAll("line.link")
@@ -77,7 +82,7 @@ function startViz() {
     node.on("mouseout", function(e) {
         $('.infoPopup').hide();
     });    
-    
+        
     vis.style("opacity", 1e-6)
       .transition()
         .duration(1000)
@@ -112,8 +117,10 @@ function drawPasswordHash(canvas,password) {
 }
 
 function mouseOver(e) {
-    $('.infoPopup').css('left',e.x + 20);
-    $('.infoPopup').css('top',e.y);
+    // FIXME: Find a better way to translate viz-space to screen space.
+    $('.infoPopup').css('left',e.x + w/2);
+    $('.infoPopup').css('top',e.y+20);
+    console.log(e);
     
     if (e.group == 0) {
         $('#obfuscatePassword').html(obfuscatePassword(e.name));
