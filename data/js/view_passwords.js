@@ -125,7 +125,7 @@ function mouseOver(e) {
     if (e.group == 0) {
         $('#obfuscatePassword').html(obfuscatePassword(e.name));
         $('#passwordInfo').show();
-        drawPasswordStrength($('#passwordStrengthCanvas').get()[0],passwordStrength(e.name));
+        // drawPasswordStrength($('#passwordStrengthCanvas').get()[0],passwordStrength(e.name));
         $('#passwordInfoHashImage').attr('src',getDataURLForHash(SHA1(e.name),200,15));
     }
     else {
