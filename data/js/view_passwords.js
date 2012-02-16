@@ -76,6 +76,14 @@ function startViz() {
     .call(force.drag);
     
     var node = vis.selectAll(".node");
+    
+    var passwordLinks = vis.selectAll('.link').data(loginData.links.filter(
+            function(x) { 
+                return x.group == 2;
+            }));
+    
+    passwordLinks.style("stroke-width", "3");
+    passwordLinks.on("mouseover", linkHover);
 
     node.on("mouseover", mouseOver);
     
@@ -114,6 +122,15 @@ function drawPasswordHash(canvas,password) {
         ctx.fillRect(canvas.width/6*bandX,0,canvas.width/6,canvas.height);
     }
     
+}
+
+function linkHover(e) {
+// FIXME: Find a better way to translate viz-space to screen space.
+    $('.infoPopup').css('left',e.x + w/2);
+    $('.infoPopup').css('top',e.y+20);
+    console.log(e);
+  //FIXME why does this not goes away when the mouse moves away ?
+    $('#siteInfo').html('These passwords are really similar!').show();
 }
 
 function mouseOver(e) {
