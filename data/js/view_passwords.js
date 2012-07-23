@@ -82,14 +82,16 @@ function startViz() {
                 return x.group == 2;
             }));
     
+	function hideInfoPopup() {
+        $('.infoPopup').hide();
+	}
+	
     passwordLinks.style("stroke-width", "3");
     passwordLinks.on("mouseover", linkHover);
+	passwordLinks.on("mouseout", hideInfoPopup);
 
-    node.on("mouseover", mouseOver);
-    
-    node.on("mouseout", function(e) {
-        $('.infoPopup').hide();
-    });    
+    node.on("mouseover", nodeHover);
+    node.on("mouseout", hideInfoPopup);    
         
     vis.style("opacity", 1e-6)
       .transition()
@@ -124,17 +126,15 @@ function drawPasswordHash(canvas,password) {
     
 }
 
-function linkHover(e) {
 // FIXME: Find a better way to translate viz-space to screen space.
+
+function linkHover(e) {
     $('.infoPopup').css('left',e.x + w/2);
     $('.infoPopup').css('top',e.y+20);
-    console.log(e);
-  //FIXME why does this not goes away when the mouse moves away ?
     $('#siteInfo').html('These passwords are really similar!').show();
 }
 
-function mouseOver(e) {
-    // FIXME: Find a better way to translate viz-space to screen space.
+function nodeHover(e) {
     $('.infoPopup').css('left',e.x + w/2);
     $('.infoPopup').css('top',e.y+20);
     console.log(e);
