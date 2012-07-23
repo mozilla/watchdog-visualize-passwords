@@ -6,20 +6,36 @@ var fill = d3.scale.category10();
 var w,h;
 
 function init() {
-    w = 800;
-    h = 600;
-
-    vis = d3.select("#chart").append("svg:svg")
-        .attr("width", w)
-        .attr("height", h);
+    vis = d3.select("#chart").append("svg:svg");
         
     window.loadLogins(function(logins) {
         loginData = logins;
         startViz();
     });
+	
+	var resizeTimeout = -1;
+	$(window).resize(function() {
+		console.log('resize!');
+		if (resizeTimeout != -1)
+			clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(function() {
+			resizeTimeout = -1;
+			resizeViz();
+		}, 400);
+	});
+}
+
+function resizeViz() {
+    w = $(window).width();
+    h = $(window).height();
+	
+    vis.attr("width", w-100)
+    .attr("height", h-100);
 }
 
 function startViz() {
+	resizeViz();
+	
     var force = d3.layout.force()
     .charge(-100)
     .nodes(loginData.nodes)
@@ -135,9 +151,10 @@ function linkHover(e) {
 }
 
 function nodeHover(e) {
-    $('.infoPopup').css('left',e.x + w/2);
-    $('.infoPopup').css('top',e.y+20);
-    console.log(e);
+	
+    $('.infoPopup').css('left',(d3.event.pageX /*+ w/2*/) + 'px');
+    $('.infoPopup').css('top',(d3.event.pageY+20) + 'px');
+	console.log(JSON.stringify(e));
     
     if (e.group == 0) {
         $('#obfuscatePassword').html(obfuscatePassword(e.name));
